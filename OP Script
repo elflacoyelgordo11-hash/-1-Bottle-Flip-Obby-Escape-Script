@@ -1,0 +1,77 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+--Services
+local TweenService = game:GetService("TweenService")
+local Player = game.Players.LocalPlayer
+-- Setting up the UI
+local Window = Rayfield:CreateWindow({
+    Name = "MOUSED Hub",
+    LoadingTitle = "MOUSED Hub is loading",
+    LoadingSubtitle = "By Nonfakerr",
+    ConfigurationSaving = {
+        Enabled = false,
+        FolderName = "MOUSEDHubConfigure",
+        FileName = "MOUSEDHubSetting"
+    }
+})
+--Tabs
+local MainTab = Window:CreateTab("Main", nil)
+local SettingsTab = Window:CreateTab("Settings", nil)
+--Auto Farm
+local CurrentTween
+
+local TweenService = game:GetService("TweenService")
+local Player = game.Players.LocalPlayer
+
+local TweenEnabled = false
+local CurrentTween
+
+local function TweenTo(Position)
+    local Character = Player.Character or Player.CharacterAdded:Wait()
+    local HRP = Character:WaitForChild("HumanoidRootPart")
+
+    CurrentTween = TweenService:Create(
+        HRP,
+        TweenInfo.new(2, Enum.EasingStyle.Linear), -- Always 2 seconds
+        {CFrame = CFrame.new(Position)}
+    )
+
+    CurrentTween:Play()
+    CurrentTween.Completed:Wait()
+end
+
+MainTab:CreateToggle({
+    Name = "Auto Farm",
+    CurrentValue = false,
+    Flag = "AutoTween",
+    Callback = function(Value)
+        TweenEnabled = Value
+
+        if Value then
+            task.spawn(function()
+                while TweenEnabled do
+                    TweenTo(Vector3.new(116, 73, 9504), 150)
+                    task.wait(2) -- Small delay before repeating
+                end
+            end)
+        else
+            if CurrentTween then
+                CurrentTween:Cancel()
+                CurrentTween = nil
+            end
+        end
+    end,
+})
+--Settings
+SettingsTab:CreateButton({
+   Name = "Disable Game Pause",
+   Callback = function()
+   game:GetService("GuiService"):SetGameplayPausedNotificationEnabled(false)
+   end,
+})
+
+SettingsTab:CreateButton({
+   Name = "Rejoin",
+   Callback = function()
+game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId,game.JobId)
+   end,
+})
