@@ -40,7 +40,7 @@ local function TweenTo(Position)
 end
 
 MainTab:CreateToggle({
-    Name = "Auto Farm",
+    Name = "Auto Farm(World 1)",
     CurrentValue = false,
     Flag = "AutoTween",
     Callback = function(Value)
@@ -50,6 +50,29 @@ MainTab:CreateToggle({
             task.spawn(function()
                 while TweenEnabled do
                     TweenTo(Vector3.new(116, 73, 9504), 150)
+                    task.wait(2) -- Small delay before repeating
+                end
+            end)
+        else
+            if CurrentTween then
+                CurrentTween:Cancel()
+                CurrentTween = nil
+            end
+        end
+    end,
+})
+
+MainTab:CreateToggle({
+    Name = "Auto Farm(World 2)",
+    CurrentValue = false,
+    Flag = "AutoTween",
+    Callback = function(Value)
+        TweenEnabled = Value
+
+        if Value then
+            task.spawn(function()
+                while TweenEnabled do
+                    TweenTo(Vector3.new(-5378, 320, 13183), 150)
                     task.wait(2) -- Small delay before repeating
                 end
             end)
@@ -74,4 +97,18 @@ SettingsTab:CreateButton({
    Callback = function()
 game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId,game.JobId)
    end,
+})
+
+SettingsTab:CreateButton({
+    Name = "Destroy UI",
+    Callback = function()
+        Rayfield:Destroy()
+    end
+})
+
+Rayfield:Notify({
+    Title = "MOUSED hub",
+    Content = "Works on +1 bottle flip obby escape.",
+    Duration = 3,
+    Image = nil
 })
